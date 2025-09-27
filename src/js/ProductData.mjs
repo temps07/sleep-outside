@@ -14,7 +14,16 @@ export default class ProductData {
   getData() {
     return fetch(this.path)
       .then(convertToJson)
-      .then((data) => data);
+      .then((data) => {
+        // If data is an array, return as is. If object with Result, return Result array.
+        if (Array.isArray(data)) {
+          return data;
+        } else if (data && Array.isArray(data.Result)) {
+          return data.Result;
+        } else {
+          return [];
+        }
+      });
   }
   async findProductById(id) {
     const products = await this.getData();
